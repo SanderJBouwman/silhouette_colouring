@@ -55,6 +55,10 @@ class MyTestCase(unittest.TestCase):
             with self.assertRaises(ValueError):
                 args = parse_arguments()
 
+    def test_fail(self):
+        self.fail("Test failed")
+
+
 
 if __name__ == '__main__':
     unittest.main()
