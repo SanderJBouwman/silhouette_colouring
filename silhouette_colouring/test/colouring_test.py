@@ -1,13 +1,26 @@
-import os
+"""
+This module contains the unit tests for the silhouette_colouring module.
+"""
+
+__author__ = "Sander J. Bouwman"
+
 import unittest
 
 import pandas as pd
 
 from silhouette_colouring.src.silhouette_colouring import hex_to_rgb, \
-    darken_color, csv_is_valid, parse_arguments
+    darken_color
+from silhouette_colouring.src.utils import csv_is_valid
 
 
 class testColouring(unittest.TestCase):
+    """
+    Unit tests for the silhouette_colouring module which tests the following
+    functions:
+    - hex_to_rgb
+    - darken_color
+    - csv_is_valid
+    """
 
     def test_hex_to_rgb(self):
         # Should be equal
@@ -48,7 +61,12 @@ class testColouring(unittest.TestCase):
     def test_csv_validator(self):
         # Should be valid
         # Create a dataframe with the correct columns "cell_ID", "cluster", "color"
-        valid_df = pd.DataFrame({"cell_ID": [1, 2, 3], "cluster": [1, 2, 3], "color": ["#000000", "#FFFFFF", "#FF0000"]})
+        valid_df = pd.DataFrame({
+            "cell_ID": [1, 2, 3],
+            "cluster": [1, 2, 3],
+            "color": ["#000000", "#FFFFFF", "#FF0000"]
+        })
+
         self.assertTrue(csv_is_valid(valid_df))
 
         # Should not be valid
