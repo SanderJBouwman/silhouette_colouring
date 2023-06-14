@@ -17,7 +17,10 @@ pip install -e -u .
 
 ## Usage
 The package can be used to colour in silhouettes of images.
-For more help run ```shell silhouette_colouring -h```
+For more help run: 
+```shell
+silhouette_colouring -h
+```
 
 ### Simple  
 ```shell
