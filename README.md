@@ -16,7 +16,7 @@ pip install .
 ### 1. Terminal returns`command not found silhouette-col`
 Try restaring terminal.  
 
-### 2. Images won't be coloured
+### 2. There is no difference between the input and ouput images. 
 The input images are expected to have exact rgb values. These are locked and (currently) can't be changed.  
 
 | Type      	| RGB value        	| RGBA value          	|
