@@ -17,9 +17,12 @@ pip install .
 Try restaring terminal.  
 
 ### Images won't be coloured
-The image expects the primary color to be the exact RGB value *(128, 128, 255)* or RGBA *(128, 128, 255, 255)*. The secondary color should be RGB *(0, 0, 255)* or RGBA *(0, 0, 255, 255)*.
+The input images are expected to have exact rgb values. These are locked and (currently) can't be changed.  
 
-
+| Type      	| RGB value        	| RGBA value          	|
+|-----------	|-----------------	|----------------------	|
+| primary   	| (128, 128, 255) 	| (128, 128, 255, 255) 	|
+| secondary 	| (0, 0, 255)     	| (0, 0, 255, 255)     	|
 
 
 ## Usage
