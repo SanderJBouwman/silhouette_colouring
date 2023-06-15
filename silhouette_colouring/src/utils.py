@@ -17,7 +17,12 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Change color of GIFs")
 
     # Add the command-line arguments
-    parser.add_argument("input_csv", type=Path, help="Path to CSV file")
+    parser.add_argument("input_csv", type=Path, help="Path to CSV file. "
+                                                     "The CSV must have "
+                                                     "the following columns: "
+                                                     "`cell_ID`, `cluster` "
+                                                     "and `color`")
+
     parser.add_argument("gif_input_dir", type=Path,
                         help="Path where the GIFs are located")
     parser.add_argument(
