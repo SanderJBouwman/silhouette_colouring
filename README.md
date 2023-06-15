@@ -25,6 +25,13 @@ The input images are expected to have exact rgb values. These are locked and (cu
 | secondary 	| (0, 0, 255)     	| (0, 0, 255, 255)     	|
 
 ## Parameters 
+Required:  
+| Parameter 	| Description                                                                                                                                                                          	| example            	| Default 	|
+|-----------	|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|--------------------	|---------	|
+| arg 1     	| Path to a .csv file which will be used as reference for the colouring. It must have the following columns: 'cell_ID', 'cluster' and 'color'. The color should be given in HEX format 	| `../reference.csv` 	| None    	|
+| arg 2     	| Path to directory that contains the GIF that will be used. (It will try to convert all GIF images in that directory so make sure only the right images are in it)                     	| `../gifs`          	| None    	|
+
+Non-required:
 | Parameter      	| Description                                                       	| example          	| Default       	|
 |----------------	|-------------------------------------------------------------------	|------------------	|---------------	|
 |`-o --output`    | Sets the output directory where the created images will be stored 	| `-o runs/output` 	| `working dir` 	|
