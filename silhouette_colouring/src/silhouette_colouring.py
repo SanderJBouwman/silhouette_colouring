@@ -65,15 +65,15 @@ def change_color(input_image: Image.Image,
     :param hex_code: Hex code to change the color to (e.g. #FF0000)
     :return:  New image with the changed color
     """
-    data: np.ndarray = np.array(input_image)
+    data: np.ndarray[np.uint8] = np.array(input_image)
 
     current_light: tuple[int, int, int, int] = (128, 128, 255, 255)
-    new_light: np.ndarray = np.append(hex_to_rgb(hex_code), 255)
+    new_light: np.ndarray[np.uint8] = np.append(hex_to_rgb(hex_code), 255)
 
     # Create the new_dark which is the same as the new_light but darker by 10%
     current_dark: tuple[int, int, int, int] = (0, 0, 255, 255)
 
-    new_dark: np.ndarray = np.append(
+    new_dark: np.ndarray[np.uint8] = np.append(
         darken_color(
             new_light[0],
             new_light[1],
@@ -91,7 +91,7 @@ def change_color(input_image: Image.Image,
     return new_im
 
 
-def discover_files(target_dir: Path, search_query: str):
+def discover_files(target_dir: Path, search_query: str) -> list[Path]:
     """
     Discover files in a directory with a search query.
 
@@ -156,14 +156,16 @@ def main() -> int:
         sys.exit(0)
 
     n_processes: int = mp.cpu_count()
-    progress_bar = tqdm.tqdm(total=len(filepaths), desc="Processing GIFs", unit="GIFs")
+    progress_bar: tqdm.tqdm = tqdm.tqdm(total=len(filepaths),
+                                        desc="Processing GIFs",
+                                        unit="GIFs")
 
-    def update_progress(*_):
+    def update_progress(*_: object) -> None:
         progress_bar.update()
 
     with mp.Pool(n_processes) as pool:
         results = [
-            pool.apply_async(process_file, (filepath, color_csv_df, args.outputDir, args.darkening), callback=update_progress)
+            pool.apply_async(process_file, (filepath, color_csv_df, args.output, args.darkening), callback=update_progress)
             for filepath in filepaths
         ]
 

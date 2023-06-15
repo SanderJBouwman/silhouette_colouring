@@ -28,11 +28,11 @@ def parse_arguments() -> argparse.Namespace:
         help="Darkening factor (default: 0.2) - must be between 0.0 and 1.0",
     )
     parser.add_argument(
-        "--outputDir",
+        "--output",
         "-o",
         type=Path,
         required=False,
-        help="Output directory (default: gif_input_dir/output)",
+        help="Output directory (default: working directory)",
     )
 
     args = parser.parse_args()
@@ -40,7 +40,7 @@ def parse_arguments() -> argparse.Namespace:
     return args
 
 
-def validate_args(args):
+def validate_args(args: argparse.Namespace) -> None:
     """
     Validate the arguments. This function will raise an exception if the
     arguments are invalid. If the arguments are valid, nothing will happen.
@@ -61,15 +61,17 @@ def validate_args(args):
     if not args.gif_input_dir.exists():
         raise FileNotFoundError(
             f"GifInputDir path '{args.gif_input_dir}' "
-            f"does not exist. Are you sure this is the right location")
+            f"does not exist. Are you sure this is the right location?")
 
-    if args.outputDir is None:
-        args.outputDir = args.gif_input_dir / "SilhouetteOutput"
-        print(
-            f"No output directory specified. Using default '{args.outputDir}'")
+    if args.output is None:
+        # We set the output to the current working directory
+        args.output = Path.cwd()
 
-    if not args.outputDir.exists():
-        args.outputDir.mkdir()
+
+    if not args.output.exists():
+        raise FileNotFoundError(
+            f"Output path '{args.output}' "
+            f"does not exist. Are you sure this is the right location?")
 
     # Validate darkening factor
     if args.darkening < 0 or args.darkening > 1:

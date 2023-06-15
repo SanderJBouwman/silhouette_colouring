@@ -22,7 +22,7 @@ class testColouring(unittest.TestCase):
     - csv_is_valid
     """
 
-    def test_hex_to_rgb(self):
+    def test_hex_to_rgb(self) -> None:
         # Should be equal
         self.assertEqual((0, 0, 0), hex_to_rgb("#000000"))  # Pure black
         self.assertEqual((255, 255, 255), hex_to_rgb("#FFFFFF"))  # Pure white
@@ -40,7 +40,7 @@ class testColouring(unittest.TestCase):
         self.assertNotEqual((0, 255, 0),
                             hex_to_rgb("#0000FF"))  # Pure green vs pure blue
 
-    def test_darken_color(self):
+    def test_darken_color(self) -> None:
         darken_factor = 0.1
         red = (255, 0, 0)
         darkened_red = darken_color(red[0], red[1], red[2], darken_factor)
@@ -58,7 +58,7 @@ class testColouring(unittest.TestCase):
         self.assertLess(darkened_light_blue[1], light_blue[1])
         self.assertLess(darkened_light_blue[2], light_blue[2])
 
-    def test_csv_validator(self):
+    def test_csv_validator(self) -> None:
         # Should be valid
         # Create a dataframe with the correct columns "cell_ID", "cluster", "color"
         valid_df = pd.DataFrame({
