@@ -1,8 +1,5 @@
 # silhouette_colouring
-This package is created to colour in silhouettes of gifs.
-
-## Requirements
-`Pandas` and `Pillow` are required to run the package.
+A simple commandline tool that allows the re-colouring of sillhouettes in large batches of GIF images.
 
 ## Installation
 
@@ -10,32 +7,45 @@ Make sure git is installed on your system. If not, install it (https://git-scm.c
 
 Run the following commands in your terminal to install the package:
 ```shell 
-git clone git@github.com:SanderJBouwman/silhouette_colouring.git
+git clone https://github.com/SanderJBouwman/silhouette_colouring.git
 cd silhouette_colouring
-pip install -e -u .
+pip install .
 ```
+
+## Issues 
+### Terminal returns`command not found silhouette-col`
+Try restaring terminal.  
+
+### Images won't be coloured
+The input images are expected to have exact rgb values. These are locked and (currently) can't be changed.  
+
+| Type      	| RGB value        	| RGBA value          	|
+|-----------	|-----------------	|----------------------	|
+| primary   	| (128, 128, 255) 	| (128, 128, 255, 255) 	|
+| secondary 	| (0, 0, 255)     	| (0, 0, 255, 255)     	|
+
 
 ## Usage
 The package can be used to colour in silhouettes of images.
 For more help run: 
 ```shell
-silhouette_colouring -h
+silhouette-col -h
 ```
 
 ### Simple  
 ```shell
-silhouette_colouring <path_to_csv> <path_to_images>
+silhouette-col <path_to_csv> <path_to_images>
 ```
 
 ### Additional options 
 Add output directory
 ```shell
-silhouette_colouring <path_to_csv> <path_to_images> -o <path_to_output>
+silhouette-col <path_to_csv> <path_to_images> -o <path_to_output>
 ```
 
 Change the darkening factor of the nucleus
 ```shell
-silhouette_colouring <path_to_csv> <path_to_images> -d <darkening_factor>
+silhouette-col <path_to_csv> <path_to_images> -d <darkening_factor>
 ```
 
 ## Author and maintainer
