@@ -10,7 +10,7 @@ Make sure git is installed on your system. If not, install it (https://git-scm.c
 
 Run the following commands in your terminal to install the package:
 ```shell 
-git clone git@github.com:SanderJBouwman/silhouette_colouring.git
+git clone https://github.com/SanderJBouwman/silhouette_colouring.git
 cd silhouette_colouring
 pip install .
 ```
