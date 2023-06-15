@@ -1,5 +1,5 @@
 # silhouette_colouring
-This package is created to change the colours of silhouettes in large batches of GIF images.
+A simple commandline tool that allows the re-colouring of sillhouettes in large batches of GIF images.
 
 ## Installation
 
