@@ -12,14 +12,22 @@ cd silhouette_colouring
 pip install .
 ```
 
+## Issues 
+### Terminal returns`command not found silhouette-col`
+Try restaring terminal.  
+
+### Images won't be coloured
+The image expects the primary color to be the exact RGB value *(128, 128, 255)* or RGBA *(128, 128, 255, 255)*. The secondary color should be RGB *(0, 0, 255)* or RGBA *(0, 0, 255, 255)*.
+
+
+
+
 ## Usage
 The package can be used to colour in silhouettes of images.
 For more help run: 
 ```shell
 silhouette-col -h
 ```
-
-*Note: if you get an error that the command can't be found in Path try to restart your terminal. This should fix this issue.*
 
 ### Simple  
 ```shell
