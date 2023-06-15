@@ -13,7 +13,9 @@ from typing import Tuple
 
 import numpy as np
 import pandas as pd
+import tqdm
 from PIL import Image
+
 from silhouette_colouring.src.utils import load_csv_file, parse_arguments
 
 
@@ -154,10 +156,23 @@ def main() -> int:
         sys.exit(0)
 
     n_processes: int = mp.cpu_count()
+    progress_bar = tqdm.tqdm(total=len(filepaths), desc="Processing GIFs", unit="GIFs")
+
+    def update_progress(*_):
+        progress_bar.update()
+
     with mp.Pool(n_processes) as pool:
-        pool.starmap(process_file,
-                     [(filepath, color_csv_df, args.outputDir, args.darkening)
-                      for filepath in filepaths])
+        results = [
+            pool.apply_async(process_file, (filepath, color_csv_df, args.outputDir, args.darkening), callback=update_progress)
+            for filepath in filepaths
+        ]
+
+        # Wait for all processes to complete
+        for result in results:
+            result.get()
+
+    progress_bar.close()
+
 
     return 0
 

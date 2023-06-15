@@ -68,6 +68,5 @@ class MyTestCase(unittest.TestCase):
             with self.assertRaises(ValueError):
                 parse_arguments()
 
-
 if __name__ == '__main__':
     unittest.main()
