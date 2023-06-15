@@ -22,7 +22,7 @@ For more help run:
 silhouette-col -h
 ```
 
-Note: if you get an errpr that the command can't be found in Path try to restart your terminal. This should fix this issue.
+*Note: if you get an error that the command can't be found in Path try to restart your terminal. This should fix this issue.*
 
 ### Simple  
 ```shell
