@@ -24,6 +24,12 @@ The input images are expected to have exact rgb values. These are locked and (cu
 | primary   	| (128, 128, 255) 	| (128, 128, 255, 255) 	|
 | secondary 	| (0, 0, 255)     	| (0, 0, 255, 255)     	|
 
+## Parameters 
+| Parameter      	| Description                                                       	| example          	| Default       	|
+|----------------	|-------------------------------------------------------------------	|------------------	|---------------	|
+|`-o --output`    | Sets the output directory where the created images will be stored 	| `-o runs/output` 	| `working dir` 	|
+|`-d --darkening` | Set the darkening factor. This value can be between 0.0 and 1.0   	| `-d 0.35`        	| `0.2`         	|
+
 
 ## Usage
 The package can be used to colour in silhouettes of images.
