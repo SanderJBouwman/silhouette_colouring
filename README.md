@@ -1,9 +1,6 @@
 # silhouette_colouring
 This package is created to colour in silhouettes of gifs.
 
-## Requirements
-`Pandas` and `Pillow` are required to run the package.
-
 ## Installation
 
 Make sure git is installed on your system. If not, install it (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
