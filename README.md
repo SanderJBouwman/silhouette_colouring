@@ -12,6 +12,29 @@ cd silhouette_colouring
 pip install .
 ```
 
+## Usage
+The package can be used to colour in silhouettes of images.
+For more help run: 
+```shell
+silhouette-col -h
+```
+
+### Simple  
+```shell
+silhouette-col <path_to_csv> <path_to_images>
+```
+
+### Additional options 
+Add output directory
+```shell
+silhouette-col <path_to_csv> <path_to_images> -o <path_to_output>
+```
+
+Change the darkening factor of the nucleus
+```shell
+silhouette-col <path_to_csv> <path_to_images> -d <darkening_factor>
+```
+
 ## Issues 
 ### 1. Terminal returns`command not found silhouette-col`
 Try restaring terminal.  
@@ -36,30 +59,6 @@ Non-required:
 |----------------	|-------------------------------------------------------------------	|------------------	|---------------	|
 |`-o --output`    | Sets the output directory where the created images will be stored 	| `-o runs/output` 	| `working dir` 	|
 |`-d --darkening` | Set the darkening factor. This value can be between 0.0 and 1.0   	| `-d 0.35`        	| `0.2`         	|
-
-
-## Usage
-The package can be used to colour in silhouettes of images.
-For more help run: 
-```shell
-silhouette-col -h
-```
-
-### Simple  
-```shell
-silhouette-col <path_to_csv> <path_to_images>
-```
-
-### Additional options 
-Add output directory
-```shell
-silhouette-col <path_to_csv> <path_to_images> -o <path_to_output>
-```
-
-Change the darkening factor of the nucleus
-```shell
-silhouette-col <path_to_csv> <path_to_images> -d <darkening_factor>
-```
 
 ## Author and maintainer
 Sander J. Bouwman
