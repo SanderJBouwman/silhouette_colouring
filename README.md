@@ -4,8 +4,14 @@ A simple commandline tool that allows the re-colouring of sillhouettes in large 
 ## Installation
 >Note: Make sure git is installed on your system. If not, install it (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)  
 
-  
-Run the following commands in your terminal to install the package:
+
+There are two options of installation: 
+### Option 1: Installing directly from GitHub:
+>```shell
+>pip install 'silhouette_colouring @ git+https://github.com/SanderJBouwman/silhouette_colouring.git'
+>```
+
+### Option 2: Cloning the repository then installing: 
 >```shell 
 >git clone https://github.com/SanderJBouwman/silhouette_colouring.git
 >cd silhouette_colouring
