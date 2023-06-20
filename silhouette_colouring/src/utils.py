@@ -72,7 +72,6 @@ def validate_args(args: argparse.Namespace) -> None:
         # We set the output to the current working directory
         args.output = Path.cwd()
 
-
     if not args.output.exists():
         raise FileNotFoundError(
             f"Output path '{args.output}' "
@@ -82,6 +81,7 @@ def validate_args(args: argparse.Namespace) -> None:
     if args.darkening < 0 or args.darkening > 1:
         raise ValueError(
             f"Darkening factor '{args.darkening}' must be between 0.0 and 1.0")
+
 
 def csv_is_valid(loaded_csv_df: pd.DataFrame) -> tuple[bool, list[str]]:
     """
@@ -99,9 +99,6 @@ def csv_is_valid(loaded_csv_df: pd.DataFrame) -> tuple[bool, list[str]]:
             missing_columns.append(column)
 
     return valid, missing_columns
-
-
-
 
 
 def load_csv_file(path: Path) -> pd.DataFrame:
@@ -127,3 +124,6 @@ def load_csv_file(path: Path) -> pd.DataFrame:
 
     # Return the DataFrame
     return loaded_csv_df
+
+
+__all__ = ["parse_arguments", "load_csv_file"]

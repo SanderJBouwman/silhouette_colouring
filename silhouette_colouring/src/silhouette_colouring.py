@@ -48,10 +48,10 @@ def darken_color(red: int,
     """
     if factor < 0 or factor > 1:
         raise ValueError("Factor must be between 0 and 1")
-
-    darkened = tuple(
-        [int(value * (1 - factor)) for value in (red, green, blue)])
-    return darkened[0], darkened[1], darkened[2]
+    darkened_red = int(red * (1 - factor))
+    darkened_green = int(green * (1 - factor))
+    darkened_blue = int(blue * (1 - factor))
+    return darkened_red, darkened_green, darkened_blue
 
 
 def change_color(input_image: Image.Image,
@@ -131,9 +131,9 @@ def process_file(filepath: Path,
                                               darkening_factor)
 
     cluster = str(row["cluster"].iloc[0])
-    gif_filename: str = Path(filepath).name.replace("-sil",
-                                                    "-colored").replace(
-        " ", "_")
+    gif_filename: str = filepath.name.\
+        replace("-sil", "-colored").replace(" ", "_")
+
     output_gif_path: Path = output_dir / (cluster + "_" + gif_filename)
 
     # Save colored image
@@ -165,7 +165,9 @@ def main() -> int:
 
     with mp.Pool(n_processes) as pool:
         results = [
-            pool.apply_async(process_file, (filepath, color_csv_df, args.output, args.darkening), callback=update_progress)
+            pool.apply_async(process_file, (
+            filepath, color_csv_df, args.output, args.darkening),
+                             callback=update_progress)
             for filepath in filepaths
         ]
 
@@ -175,9 +177,11 @@ def main() -> int:
 
     progress_bar.close()
 
-
     return 0
 
 
 if __name__ == '__main__':
     sys.exit(main())
+
+
+__all__ = ["change_color", "process_file"]
