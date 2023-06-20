@@ -84,5 +84,20 @@ class MyTestCase(unittest.TestCase):
             with self.assertRaises(ValueError):
                 parse_arguments()
 
+    def test_colour_okay(self) -> None:
+        with patch('argparse._sys.argv', [
+            'test_script.py',
+            'test_files/test_csv.csv',
+            'test_files/test_images',
+            '--darkening', '0.2',
+            '--output', 'test_files/test_output',
+            '--dark-colour', '0,0,255',
+            '--light-colour', '128,128,255,255'
+        ]):
+            try:
+                parse_arguments()
+            except Exception as error:
+                self.fail(f"Exception raised: {error}")
+
 if __name__ == '__main__':
     unittest.main()

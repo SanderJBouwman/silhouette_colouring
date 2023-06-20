@@ -6,6 +6,7 @@ import argparse
 from pathlib import Path
 
 import pandas as pd
+from PIL import Image
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -40,9 +41,49 @@ def parse_arguments() -> argparse.Namespace:
         help="Output directory (default: working directory)",
     )
 
+    parser.add_argument("--light-colour", type=parse_colour,
+                        metavar="R,G,B[,A]",
+                        default="128,128,255",
+                        help="Specify the light colour as 3 or 4 comma-separated integers (RGB or RGBA). "
+                             "Example: 128,128,255 or 128,128,255,255. "
+                             "Default: 128,128,255.")
+
+    parser.add_argument("--dark-colour", type=parse_colour,
+                        metavar="R,G,B[,A]",
+                        default="0,0,255",
+                        help="Specify the dark colour as 3 or 4 "
+                             "comma-separated integers (RGB or RGBA)."
+                             "Example: 0,0,255 or 0,0,255,255. Default: 0,0,255.")
+
+    parser.add_argument("--no-discover-colours", action="store_false",
+                        default=True,
+                        help="Will remove the colour discovery step and and "
+                             "uses the --light-colour and --dark-colour")
+
     args = parser.parse_args()
     validate_args(args)
     return args
+
+
+def parse_colour(colour_str: str) -> tuple[int, int, int, int]:
+    colour_values = colour_str.split(",")
+    if len(colour_values) not in [3, 4]:
+        raise argparse.ArgumentTypeError(
+            "Colour must be specified as 3 or 4 comma-separated integers (RGB or RGBA).")
+    try:
+        colour_ints = [int(val) for val in colour_values]
+        if any(val < 0 or val > 255 for val in colour_ints):
+            raise argparse.ArgumentTypeError(
+                "Colour values must be in the range of 0-255.")
+    except ValueError:
+        raise argparse.ArgumentTypeError("Colour values must be integers.")
+
+    if len(colour_ints) == 3:
+        alpha: int = 255
+    else:
+        alpha: int = colour_ints[3]
+
+    return colour_ints[0], colour_ints[1], colour_ints[2], alpha
 
 
 def validate_args(args: argparse.Namespace) -> None:
@@ -126,4 +167,21 @@ def load_csv_file(path: Path) -> pd.DataFrame:
     return loaded_csv_df
 
 
-__all__ = ["parse_arguments", "load_csv_file"]
+def discover_colours(image: Image.Image) -> tuple[
+    [int, int, int, int], [int, int, int, int]]:
+    """
+    Discover the light and dark colours of the image by using the getcolors
+    method of the Image class. We expect that the light colour is the second
+    most common colour and the dark colour is the third most common colour.
+    :param image: The image to discover the colours of (PIL Image)
+    :return: A tuple with the light and dark colours as RGBA tuples
+    """
+    colours: list[tuple] = image.getcolors(256)
+    colours: list[tuple] = sorted(colours, key=lambda x: x[0], reverse=True)
+
+    light_colour: tuple[int, int, int, int] = colours[1][1]
+    dark_colour: tuple[int, int, int, int] = colours[2][1]
+    return light_colour, dark_colour
+
+
+__all__ = ["parse_arguments", "load_csv_file", "discover_colours"]
