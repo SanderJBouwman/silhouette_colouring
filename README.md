@@ -19,7 +19,7 @@ There are two options of installation:
 >```
 
 ## Usage
-*Note: It might be possible that your terminal returns `command not found silhouette-col` after installation. Restarting your terminal will most possibly fix this issue.*  
+>*Note: It might be possible that your terminal returns `command not found silhouette-col` after installation. Restarting your terminal will most possibly fix this issue.*  
 
 The package can be used to colour in silhouettes of images.
 For more help run: 
@@ -67,7 +67,7 @@ Setting the light colour and dark colour to non-standard
 | primary (light)   	| (128, 128, 255) 	| (128, 128, 255, 255) 	|
 | secondary (dark) 	| (0, 0, 255)     	| (0, 0, 255, 255)     	|
 
-*Note: If you don't want to set the colours directly, you can parse the `--discover-colours` parameter which will attempt to find the primary and secondary colours by itself.*
+>*Note: If you don't want to set the colours directly, you can parse the `--discover-colours` parameter which will attempt to find the primary and secondary colours by itself.*
 
 
 ### 3. ImportError: No module named ...
