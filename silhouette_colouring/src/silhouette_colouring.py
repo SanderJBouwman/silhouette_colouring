@@ -8,6 +8,7 @@ import argparse
 import multiprocessing as mp
 import struct
 import sys
+import time
 from pathlib import Path
 from typing import Tuple
 
@@ -141,7 +142,7 @@ def process_file(filepath: Path,
         if run_verbose:
             print(
                 f"WARNING: Skipping image ({filepath}) due to: "
-                f"cell_ID not found in CSV")
+                f"cell_ID not found in CSV", file=sys.stderr)
         return 1
 
     original_image: Image.Image = Image.open(filepath).convert("RGBA")
@@ -154,13 +155,13 @@ def process_file(filepath: Path,
     if light_colour not in colours:
         if run_verbose:
             print(f"WARNING: Skipping image ({filepath}) due to: "
-                  f"Light colour {light_colour} not in image")
+                  f"Light colour {light_colour} not in image", file=sys.stderr)
         return 2
 
     if dark_colour not in colours:
         if run_verbose:
             print(f"WARNING: Skipping image ({filepath}) due to: "
-                  f"Dark colour {dark_colour} not in image")
+                  f"Dark colour {dark_colour} not in image", file=sys.stderr)
         return 3
 
     colored_image: Image.Image = change_color(original_image,
@@ -185,6 +186,8 @@ def process_file(filepath: Path,
 
 
 def main() -> int:
+    start_time = time.time()
+
     args: argparse.Namespace = parse_arguments()
     gif_input_dir: Path = args.gif_input_dir
     input_csv: Path = args.input_csv
@@ -219,12 +222,21 @@ def main() -> int:
             was_successful.append(result.get())
 
     progress_bar.close()
+
+    processing_time: float = round(time.time() - start_time, 2)
     print(f"Processed {was_successful.count(0)}/{len(was_successful)} "
-          f"GIFs succesfully | "
-          f"cell_ID not found in CSV: {was_successful.count(1)} "
-          f"images, "
-          f"no light colour: {was_successful.count(2)} images, "
-            f"no dark colour: {was_successful.count(3)} images")
+          f"GIFs succesfully (in {processing_time} seconds)", end="")
+
+    if was_successful.count(0) != len(was_successful):
+        print("| "
+              f"cell_ID not found in CSV: {was_successful.count(1)} "
+              f"images, "
+              f"light colour not found: {was_successful.count(2)} images, "
+              f"dark colour not found: {was_successful.count(3)} images")
+        if not args.verbose:
+            print(
+                "Try running the script with the --verbose flag to see which "
+                "images failed to process.")
 
     return 0
 

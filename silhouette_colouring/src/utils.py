@@ -3,6 +3,7 @@
 This module contains utility functions for the silhouette colouring project.
 """
 import argparse
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -133,19 +134,13 @@ def validate_args(args: argparse.Namespace) -> None:
         raise ValueError(
             f"Darkening factor '{args.darkening}' must be between 0.0 and 1.0")
 
-    # If light_colour or dark_colour is specified, we don't need to discover
-    # the colours
-    if args.light_colour is not None or args.dark_colour is not None:
-        print("WARNING: You have specified custom colours. This will stop the "
-              "colour discovery step from running.")
-
     # We need to specify both light_colour and dark_colour if we want to
     # override the colour discovery step
     default_light_colour = "128,128,255,255"
     default_dark_colour = "0,0,255,255"
     if args.discover_colours:
         print("WARNING: Using colour discovery. This will override the "
-              "light_colour and dark_colour arguments.")
+              "light_colour and dark_colour arguments.", file=sys.stderr)
 
     if args.light_colour is not None or args.dark_colour is not None:
         if args.discover_colours:
@@ -158,15 +153,16 @@ def validate_args(args: argparse.Namespace) -> None:
     if args.light_colour is None and args.discover_colours is False:
         args.light_colour = parse_colour(default_light_colour)
         print(
-            f"WARNING: You have not specified a light colour. Using default: {args.light_colour}")
-    else:
-        args.light_colour = parse_colour(args.light_colour)
+            f"WARNING: You have not specified a light colour. Using default: {args.light_colour}", file=sys.stderr)
+    elif args.light_colour is not None and args.discover_colours is False:
+            args.light_colour = parse_colour(args.light_colour)
 
     if args.dark_colour is None and args.discover_colours is False:
         args.dark_colour = parse_colour(default_dark_colour)
-        print(f"WARNING: You have not specified a dark colour. Using default: {args.dark_colour}")
-    else:
+        print(f"WARNING: You have not specified a dark colour. Using default: {args.dark_colour}", file=sys.stderr)
+    elif args.dark_colour is not None and args.discover_colours is False:
         args.dark_colour = parse_colour(args.dark_colour)
+
 
 
 
