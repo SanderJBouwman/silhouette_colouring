@@ -47,6 +47,10 @@ The input images are expected to have exact rgb values. These are locked and (cu
 | primary   	| (128, 128, 255) 	| (128, 128, 255, 255) 	|
 | secondary 	| (0, 0, 255)     	| (0, 0, 255, 255)     	|
 
+### 3. ImportError: No module named ...
+Install the module using pip. For example: 
+`pip install pandas`
+
 ## Parameters 
 Required:  
 | Parameter 	| Description                                                                                                                                                                          	| example            	| Default 	|
