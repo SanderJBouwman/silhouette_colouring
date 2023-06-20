@@ -97,15 +97,12 @@ silhouette-col <path_to_csv> <path_to_images> --light-colour 255,255,255 --dark-
 ---
 
 ## Parameters 
-
 **Required**:
 
-| Parameter 	| Description                                                                                                                                                                          	| Example            	| Default 	|
-|-----------	|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|--------------------	|---------	|
-| arg 1     	| Path to a .csv file which will be used as a reference for the coloring. It must have the following columns: 'cell_ID', 'cluster
-
-', and 'color'. The color should be given in HEX format 	| `../reference.csv` 	| None    	|
-| arg 2     	| Path to the directory that contains the GIFs to be used. (It will try to convert all GIF images in that directory, so make sure only the right images are in it)                     	| `../gifs`          	| None    	|
+| Parameter   | Description                                                                                                                                                                                                                         | Example             | Default |
+|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|---------|
+| arg 1       | Path to a .csv file which will be used as a reference for the coloring. It must have the following columns: 'cell_ID', 'cluster', and 'color'. The color should be given in HEX format.                                              | `../reference.csv`  | None    |
+| arg 2       | Path to the directory that contains the GIFs to be used. It will try to convert all GIF images in that directory, so make sure only the right images are in it.                                                                    | `../gifs`           | None    |
 
 **Non-required**:
 
