@@ -13,7 +13,7 @@ Run the following commands in your terminal to install the package:
 >```
 
 ## Usage
-*Note: It might be possible that your terminal returns `command not found silhouette-col`. Restarting your terminal will most possibly fix this issue.*  
+*Note: It might be possible that your terminal returns `command not found silhouette-col` after installation. Restarting your terminal will most possibly fix this issue.*  
 
 The package can be used to colour in silhouettes of images.
 For more help run: 
