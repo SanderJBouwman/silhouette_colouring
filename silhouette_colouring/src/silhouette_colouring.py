@@ -115,10 +115,11 @@ def process_file(filepath: Path,
                  darkening_factor: float,
                  light_colour: tuple[int, int, int, int],
                  dark_colour: tuple[int, int, int, int],
-                 use_discover_colour: bool) -> None:
+                 discover_colour: bool,
+                 run_verbose: bool) -> int:
     """
     Process a file by changing the color of the GIF and saving it to the output
-    :param use_discover_colour:
+    :param discover_colour:
     :param dark_colour:
     :param light_colour:
     :param filepath: filepath to the GIF
@@ -127,7 +128,9 @@ def process_file(filepath: Path,
     :param output_dir: output directory where the GIF will be saved
     :param darkening_factor: darkening factor to use when
     changing the color of the nucleus
-    :return: None
+    :return: Exit code: 0 = success, 1 = cell_ID not found in reference_df,
+    2 = light colour not in image, 3 = dark colour not in image
+
     """
 
     # Find the row in the reference_df
@@ -135,12 +138,30 @@ def process_file(filepath: Path,
 
     # Check if the row exists
     if len(row) == 0:
-        return
+        if run_verbose:
+            print(
+                f"WARNING: Skipping image ({filepath}) due to: "
+                f"cell_ID not found in CSV")
+        return 1
 
     original_image: Image.Image = Image.open(filepath).convert("RGBA")
-    if use_discover_colour:
-        print(f"Discovering colours for {filepath}")
+    if discover_colour:
         light_colour, dark_colour = discover_colours(original_image)
+
+    # Get the colors from the original image
+    colours = [x[1] for x in original_image.getcolors(256)]
+    # Check if the light and dark colours are in the original image
+    if light_colour not in colours:
+        if run_verbose:
+            print(f"WARNING: Skipping image ({filepath}) due to: "
+                  f"Light colour {light_colour} not in image")
+        return 2
+
+    if dark_colour not in colours:
+        if run_verbose:
+            print(f"WARNING: Skipping image ({filepath}) due to: "
+                  f"Dark colour {dark_colour} not in image")
+        return 3
 
     colored_image: Image.Image = change_color(original_image,
                                               row["color"].iloc[0],
@@ -160,6 +181,9 @@ def process_file(filepath: Path,
     original_image.close()
     colored_image.close()
 
+    return 0
+
+
 def main() -> int:
     args: argparse.Namespace = parse_arguments()
     gif_input_dir: Path = args.gif_input_dir
@@ -169,15 +193,7 @@ def main() -> int:
     filepaths: list[Path] = discover_files(gif_input_dir, "*.gif")
 
     if len(filepaths) == 0:
-        print("No GIFs found")
-        sys.exit(0)
-
-    if args.no_discover_colours == False:
-        print(f"Discover mode is turned off. Using colours from "
-              f"--light-colour {args.light_colour} and --dark-co"
-              f"lour {args.dark_colour}")
-    else:
-        print("Discovering mode is turned on. Using colours from GIFs")
+        raise FileNotFoundError(f"No GIFs found in {gif_input_dir}")
 
     n_processes: int = mp.cpu_count()
     progress_bar: tqdm.tqdm = tqdm.tqdm(total=len(filepaths),
@@ -187,20 +203,28 @@ def main() -> int:
     def update_progress(*_: object) -> None:
         progress_bar.update()
 
+    was_successful: list = []
     with mp.Pool(n_processes) as pool:
         results = [
             pool.apply_async(process_file, (
                 filepath, color_csv_df, args.output, args.darkening,
-                args.light_colour, args.dark_colour, args.no_discover_colours),
+                args.light_colour, args.dark_colour,
+                args.discover_colours, args.verbose),
                              callback=update_progress)
             for filepath in filepaths
         ]
 
         # Wait for all processes to complete
         for result in results:
-            result.get()
+            was_successful.append(result.get())
 
     progress_bar.close()
+    print(f"Processed {was_successful.count(0)}/{len(was_successful)} "
+          f"GIFs succesfully | "
+          f"cell_ID not found in CSV: {was_successful.count(1)} "
+          f"images, "
+          f"no light colour: {was_successful.count(2)} images, "
+            f"no dark colour: {was_successful.count(3)} images")
 
     return 0
 

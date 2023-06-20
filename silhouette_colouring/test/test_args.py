@@ -1,3 +1,4 @@
+import argparse
 import unittest
 from unittest.mock import patch
 
@@ -98,6 +99,32 @@ class MyTestCase(unittest.TestCase):
                 parse_arguments()
             except Exception as error:
                 self.fail(f"Exception raised: {error}")
+
+    def test_wrong_dark_colour(self) -> None:
+        with patch('argparse._sys.argv', [
+            'test_script.py',
+            'test_files/test_csv.csv',
+            'test_files/test_images',
+            '--darkening', '0.2',
+            '--output', 'test_files/test_output',
+            '--dark-colour', '0,0',
+            '--light-colour', '128,128,255'
+        ]):
+            with self.assertRaises(argparse.ArgumentTypeError):
+                parse_arguments()
+
+    def test_wrong_light_colour(self) -> None:
+        with patch('argparse._sys.argv', [
+            'test_script.py',
+            'test_files/test_csv.csv',
+            'test_files/test_images',
+            '--darkening', '0.2',
+            '--output', 'test_files/test_output',
+            '--dark-colour', '0,0,255',
+            '--light-colour', '128,128'
+        ]):
+            with self.assertRaises(argparse.ArgumentTypeError):
+                parse_arguments()
 
 if __name__ == '__main__':
     unittest.main()

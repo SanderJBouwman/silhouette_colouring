@@ -41,24 +41,34 @@ def parse_arguments() -> argparse.Namespace:
         help="Output directory (default: working directory)",
     )
 
-    parser.add_argument("--light-colour", type=parse_colour,
+    parser.add_argument("--light-colour", type=str,
                         metavar="R,G,B[,A]",
-                        default="128,128,255",
+                        default=None,
                         help="Specify the light colour as 3 or 4 comma-separated integers (RGB or RGBA). "
                              "Example: 128,128,255 or 128,128,255,255. "
                              "Default: 128,128,255.")
 
-    parser.add_argument("--dark-colour", type=parse_colour,
+    parser.add_argument("--dark-colour", type=str,
                         metavar="R,G,B[,A]",
-                        default="0,0,255",
+                        default=None,
                         help="Specify the dark colour as 3 or 4 "
                              "comma-separated integers (RGB or RGBA)."
                              "Example: 0,0,255 or 0,0,255,255. Default: 0,0,255.")
 
-    parser.add_argument("--no-discover-colours", action="store_false",
-                        default=True,
-                        help="Will remove the colour discovery step and and "
-                             "uses the --light-colour and --dark-colour")
+    parser.add_argument("--discover-colours", action="store_true",
+                        default=False,
+                        help="Will discover the light and "
+                             "dark colours from the image. "
+                             "The second most used color will be assigned "
+                             "to --light-colour and the third"
+                             " most used color will "
+                             "be assigned to --dark-colour. "
+                             "This will override the --dark-colour "
+                             "and --light-colour values")
+
+    parser.add_argument("--verbose", "-v", action="store_true",
+                        default=False,
+                        help="Print more information to the console")
 
     args = parser.parse_args()
     validate_args(args)
@@ -69,7 +79,8 @@ def parse_colour(colour_str: str) -> tuple[int, int, int, int]:
     colour_values = colour_str.split(",")
     if len(colour_values) not in [3, 4]:
         raise argparse.ArgumentTypeError(
-            "Colour must be specified as 3 or 4 comma-separated integers (RGB or RGBA).")
+            "Colour must be specified as 3 or 4 "
+            "comma-separated integers (RGB or RGBA).")
     try:
         colour_ints = [int(val) for val in colour_values]
         if any(val < 0 or val > 255 for val in colour_ints):
@@ -84,7 +95,6 @@ def parse_colour(colour_str: str) -> tuple[int, int, int, int]:
         alpha: int = colour_ints[3]
 
     return colour_ints[0], colour_ints[1], colour_ints[2], alpha
-
 
 def validate_args(args: argparse.Namespace) -> None:
     """
@@ -122,6 +132,43 @@ def validate_args(args: argparse.Namespace) -> None:
     if args.darkening < 0 or args.darkening > 1:
         raise ValueError(
             f"Darkening factor '{args.darkening}' must be between 0.0 and 1.0")
+
+    # If light_colour or dark_colour is specified, we don't need to discover
+    # the colours
+    if args.light_colour is not None or args.dark_colour is not None:
+        print("WARNING: You have specified custom colours. This will stop the "
+              "colour discovery step from running.")
+
+    # We need to specify both light_colour and dark_colour if we want to
+    # override the colour discovery step
+    default_light_colour = "128,128,255,255"
+    default_dark_colour = "0,0,255,255"
+    if args.discover_colours:
+        print("WARNING: Using colour discovery. This will override the "
+              "light_colour and dark_colour arguments.")
+
+    if args.light_colour is not None or args.dark_colour is not None:
+        if args.discover_colours:
+            raise ValueError("You cannot specify both --discover-colours and "
+                             "--light-colour/--dark-colour at the same time. "
+                             "This is because using --discover-colours  will "
+                             "overwrite --light-colour and --dark-colour "
+                             "making them redundant.")
+
+    if args.light_colour is None and args.discover_colours is False:
+        args.light_colour = parse_colour(default_light_colour)
+        print(
+            f"WARNING: You have not specified a light colour. Using default: {args.light_colour}")
+    else:
+        args.light_colour = parse_colour(args.light_colour)
+
+    if args.dark_colour is None and args.discover_colours is False:
+        args.dark_colour = parse_colour(default_dark_colour)
+        print(f"WARNING: You have not specified a dark colour. Using default: {args.dark_colour}")
+    else:
+        args.dark_colour = parse_colour(args.dark_colour)
+
+
 
 
 def csv_is_valid(loaded_csv_df: pd.DataFrame) -> tuple[bool, list[str]]:
