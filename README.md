@@ -91,7 +91,7 @@ silhouette-col <path_to_csv> <path_to_images> --light-colour 255,255,255 --dark-
 
 ### 3. ImportError: No module named ...
 
-- Install the module using pip. For example: 
+- Install the missing module using pip. For example: 
   `pip install pandas`
 
 ---
