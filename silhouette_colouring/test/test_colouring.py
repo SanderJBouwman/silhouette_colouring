@@ -13,14 +13,6 @@ from silhouette_colouring.src.utils import csv_is_valid, hex_to_rgb, \
 
 
 class testColouring(unittest.TestCase):
-    """
-    Unit tests for the silhouette_colouring module which tests the following
-    functions:
-    - hex_to_rgb
-    - darken_color
-    - csv_is_valid
-    """
-
     def test_hex_to_rgb(self) -> None:
         # Should be equal
         self.assertEqual((0, 0, 0), hex_to_rgb("#000000"))  # Pure black
