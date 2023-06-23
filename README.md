@@ -1,3 +1,4 @@
+[![Lint](https://github.com/SanderJBouwman/silhouette_colouring/actions/workflows/black.yml/badge.svg)](https://github.com/SanderJBouwman/silhouette_colouring/actions/workflows/black.yml)
 # silhouette_colouring
 
 A simple command-line tool that allows the recoloring of silhouettes in large batches of GIF images.
