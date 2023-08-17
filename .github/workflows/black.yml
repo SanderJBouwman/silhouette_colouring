@@ -10,4 +10,4 @@ jobs:
       - uses: psf/black@stable
         with:
           options: "--diff"
-          src: "./src"
+          src: "silhouette_colouring"
