@@ -56,7 +56,6 @@ def validate_darkening_factor(darkening_factor: float | int) -> None:
 
 
 def validate_input_colour(light_colour: str | None) -> None:
-
     # Must be a string or None
     if not isinstance(light_colour, (str, type(None))):
         raise TypeError(f"Light colour '{light_colour}' " f"must be a string or None")
@@ -67,7 +66,6 @@ def validate_input_colour(light_colour: str | None) -> None:
     try:
         parse_colour(light_colour)
     except argparse.ArgumentTypeError as e:
-
         raise argparse.ArgumentTypeError(
             f"Invalid light colour '{light_colour}'. " f"{e}"
         )
