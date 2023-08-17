@@ -15,7 +15,7 @@ from PIL import Image
 from silhouette_colouring.src.validators import validate_args
 
 
-def parse_arguments() -> argparse.Namespace:
+def parse_arguments() -> argparse.Namespace:  # pragma: no cover
     """
     Parse the command-line arguments and return the values.
     :return: The command-line arguments (as a Namespace object)
@@ -169,9 +169,6 @@ def hex_to_rgb(hex_code: str) -> Tuple[int, int, int]:
     :return: RGB tuple
     """
     rgb = struct.unpack("BBB", bytes.fromhex(hex_code.lstrip("#")))
-    if len(rgb) != 3:
-        raise ValueError("Invalid hex code")
-
     return rgb[0], rgb[1], rgb[2]
 
 
@@ -187,6 +184,16 @@ def darken_color(
     :param factor: Factor to darken the color by (0-1)
     :return:
     """
+    if (
+        not isinstance(red, int)
+        or not isinstance(green, int)
+        or not isinstance(blue, int)
+    ):
+        raise TypeError(f"Parameters red, green and blue must be integers")
+
+    if not all(0 <= x <= 255 for x in [red, green, blue]):
+        raise ValueError("Red, green and blue must be between 0 and 255")
+
     if factor < 0 or factor > 1:
         raise ValueError("Factor must be between 0 and 1")
     darkened_red = int(red * (1 - factor))
@@ -219,7 +226,10 @@ def change_color(
 
     # Create the new_dark which is the same as the new_light but darker by 10%
     new_dark: np.ndarray[np.uint8] = np.append(
-        darken_color(new_light[0], new_light[1], new_light[2], darken_factor), 255
+        darken_color(
+            int(new_light[0]), int(new_light[1]), int(new_light[2]), darken_factor
+        ),
+        255,
     )
 
     # Replace the current_light with the new_light and current_dark with the
@@ -254,7 +264,7 @@ def recolour_file(
     dark_colour: tuple[int, int, int, int],
     discover_colour: bool,
     run_verbose: bool,
-) -> int:
+) -> int:  # pragma: no cover
     """
     Process a file by changing the color of the GIF and saving it to the output
     :param run_verbose: Run verbose mode (which shows more information)
@@ -281,7 +291,7 @@ def recolour_file(
     if len(row) == 0:
         if run_verbose:
             print(
-                f"WARNING: Skipping image ({filepath}) due to: "
+                f"WARNING: Skipping image ({filepath.name}) due to: "
                 f"cell_ID not found in CSV",
                 file=sys.stderr,
             )
@@ -290,6 +300,11 @@ def recolour_file(
     original_image: Image.Image = Image.open(filepath).convert("RGBA")
     if discover_colour:
         light_colour, dark_colour = discover_colours(original_image)
+        if run_verbose:
+            print(
+                f"INFO: Discovered light colour (RGBA): {light_colour} "
+                f"and dark colour (RGBA): {dark_colour} for image: {filepath.name}"
+            )
 
     # Get the colors from the original image
     colours = [x[1] for x in original_image.getcolors(256)]
@@ -297,7 +312,7 @@ def recolour_file(
     if light_colour not in colours:
         if run_verbose:
             print(
-                f"WARNING: Skipping image ({filepath}) due to: "
+                f"WARNING: Skipping image ({filepath.name}) due to: "
                 f"Light colour {light_colour} not in image",
                 file=sys.stderr,
             )
@@ -306,7 +321,7 @@ def recolour_file(
     if dark_colour not in colours:
         if run_verbose:
             print(
-                f"WARNING: Skipping image ({filepath}) due to: "
+                f"WARNING: Skipping image ({filepath.name}) due to: "
                 f"Dark colour {dark_colour} not in image",
                 file=sys.stderr,
             )
